@@ -18,17 +18,23 @@
 @import "https://userstyles.catppuccin.com/lib/std/v1.less";
 
 @-moz-document domain("bitbucket.org") {
-  /* Bitbucket uses the Atlassian Design System, which sets `data-color-mode` on the root element. */
-  :root[data-color-mode="dark"][data-theme] {
+  /* Bitbucket uses the Atlassian Design System, which sets `data-color-mode` on the root element
+     and on "subtree" containers (e.g. Pipelines logs and popups) that redeclare the theme tokens.
+     `:root` is doubled to outrank the token selectors used on legacy pages (e.g. account settings). */
+  :root:root[data-color-mode="dark"][data-theme],
+  :root [data-subtree-theme][data-color-mode="dark"][data-theme] {
     #catppuccin(@darkFlavor);
   }
-  :root[data-color-mode="light"][data-theme] {
+  :root:root[data-color-mode="light"][data-theme],
+  :root [data-subtree-theme][data-color-mode="light"][data-theme] {
     #catppuccin(@lightFlavor);
   }
 
   #catppuccin(@flavor) {
     #lib.palette();
     #lib.defaults();
+
+    accent-color: @accent;
 
     /* Atlassian Design System accent colors, mapped to the closest Catppuccin color. */
     @accents: {
